@@ -1,8 +1,11 @@
 .page-shell {
   position: relative;
+  display: flex;
+  flex-direction: column;
   min-height: 100svh;
   padding: 24px 28px 56px;
-  overflow: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
 }
 
 .site-header,
@@ -17,7 +20,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding: 2px 0 34px;
+  padding: 2px 0 24px;
 }
 
 .brand {
@@ -101,24 +104,30 @@
 
 .hero-section {
   display: grid;
-  grid-template-columns: minmax(250px, 0.42fr) minmax(0, 0.58fr);
+  grid-template-columns: minmax(260px, 0.44fr) minmax(0, 0.56fr);
   gap: 28px;
-  align-items: start;
-  padding-top: 6px;
-  padding-bottom: 56px;
+  align-items: center;
+  min-height: 0;
+  overflow: visible;
+  padding-top: 0;
+  padding-bottom: 20px;
 }
 
 .hero-copy {
-  max-width: 22rem;
+  max-width: 27rem;
   padding-top: 1.5rem;
 }
 
 .hero-text {
-  max-width: 18.5rem;
+  max-width: 24rem;
   margin-top: 1rem;
   font-size: 0.9rem;
   line-height: 1.58;
   color: var(--muted-strong);
+}
+
+.hero-cta {
+  margin-top: 1.75rem;
 }
 
 .button {
@@ -152,69 +161,194 @@
 }
 
 
-.hero-visual {
-  display: grid;
-  grid-template-columns: minmax(140px, 0.28fr) minmax(0, 0.72fr);
-  gap: 14px;
-  align-items: stretch;
-  min-height: 500px;
-}
-
-.visual-orbit {
-  min-height: 100%;
-  border-radius: 0.9rem;
-  background:
-    radial-gradient(circle at left center, transparent 17%, rgba(23, 70, 43, 0.9) 17.5%, transparent 18.2%),
-    radial-gradient(circle at left center, transparent 33%, rgba(23, 70, 43, 0.9) 33.5%, transparent 34.2%),
-    radial-gradient(circle at left center, transparent 49%, rgba(23, 70, 43, 0.9) 49.5%, transparent 50.2%),
-    radial-gradient(circle at left center, transparent 65%, rgba(23, 70, 43, 0.9) 65.5%, transparent 66.2%),
-    radial-gradient(circle at left center, transparent 81%, rgba(23, 70, 43, 0.9) 81.5%, transparent 82.2%),
-    linear-gradient(180deg, #c9efc9, #bde5bf);
-}
-
-.visual-photo {
+.hero-stage {
   position: relative;
-  min-height: 100%;
-  border-radius: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  overflow: visible;
+  align-self: center;
+}
+
+.hero-media {
+  position: relative;
+  width: 85%;
+}
+
+.hero-slides {
+  position: relative;
+  width: 100%;
+  height: clamp(520px, calc(100svh - 11.5rem), 720px);
+  border-radius: 2.5rem;
   overflow: hidden;
 }
 
-.photo-scene {
+.hero-slide {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(90deg, #59351f 0 14%, transparent 14%),
-    linear-gradient(90deg, transparent 0 31%, #7b4b24 31% 45%, transparent 45%),
-    linear-gradient(180deg, rgba(226, 213, 197, 0.95), rgba(226, 213, 197, 0.95)),
-    linear-gradient(90deg, #dfe8ef 0 100%);
+  opacity: 0;
+  transform: translateX(-30%);
+  pointer-events: none;
 }
 
-.photo-scene::before {
-  content: '';
-  position: absolute;
-  left: 17%;
-  right: 0;
-  bottom: 0;
-  top: 0;
-  background:
-    radial-gradient(circle at 16% 82%, #7a593f 0 8%, transparent 8.5%),
-    radial-gradient(circle at 20% 66%, #e7dfd7 0 9%, transparent 9.5%),
-    radial-gradient(circle at 54% 67%, #9c6332 0 6%, transparent 6.6%),
-    radial-gradient(circle at 56% 52%, #f0ddcf 0 9%, transparent 9.6%),
-    radial-gradient(circle at 86% 74%, #d1c5ba 0 8%, transparent 8.7%),
-    radial-gradient(circle at 86% 57%, #e1dbd5 0 11%, transparent 11.6%),
-    radial-gradient(circle at 78% 55%, rgba(65, 107, 62, 0.72) 0 5%, transparent 5.5%),
-    radial-gradient(circle at 88% 54%, rgba(65, 107, 62, 0.68) 0 4.5%, transparent 5.1%),
-    linear-gradient(90deg, transparent 0 70%, rgba(204, 216, 224, 0.9) 70% 100%);
+.hero-slide[data-active='true'] {
+  opacity: 1;
+  transform: translateX(0);
+  z-index: 2;
+  pointer-events: auto;
 }
 
-.photo-scene::after {
-  content: '';
+.hero-slide[data-entering='true'] {
+  animation: slideInLeftToRight 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  z-index: 2;
+}
+
+.hero-slide[data-leaving='true'] {
+  animation: slideOutLeftToRight 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes slideInLeftToRight {
+  from {
+    opacity: 0;
+    transform: translateX(-30%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutLeftToRight {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(30%);
+  }
+}
+
+.hero-review-card {
   position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(90deg, rgba(71, 42, 24, 0.5) 0 7%, transparent 7%),
-    radial-gradient(circle at 62% 50%, rgba(255, 255, 255, 0.16), transparent 18%);
+  left: 0;
+  bottom: 3.25rem;
+  z-index: 3;
+  width: min(18rem, 110%);
+  padding: 1.15rem 1.2rem;
+  border-radius: 1.1rem;
+  transform: translate(-38%, 0);
+  background: rgba(255, 253, 250, 0.96);
+  box-shadow: 0 18px 40px rgba(23, 50, 34, 0.12);
+  backdrop-filter: blur(8px);
+  animation: reviewCardUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes reviewCardUp {
+  from {
+    opacity: 0;
+    transform: translate(-38%, 1.5rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-38%, 0);
+  }
+}
+
+.review-stars {
+  display: flex;
+  gap: 0.18rem;
+  margin-bottom: 0.65rem;
+}
+
+.star {
+  display: block;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: rgba(23, 50, 34, 0.18);
+}
+
+.star-filled {
+  color: var(--text-h);
+}
+
+.review-quote {
+  margin: 0 0 0.9rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--text-h);
+}
+
+.review-author {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.review-avatar {
+  flex-shrink: 0;
+  width: 2.15rem;
+  height: 2.15rem;
+  border-radius: 999px;
+  background: linear-gradient(145deg, #d6e5e0, #9fbf9f);
+}
+
+.review-name {
+  margin: 0;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.review-meta {
+  margin: 0.12rem 0 0;
+  font-size: 0.78rem;
+  color: var(--muted-strong);
+}
+
+.hero-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+  width: 70%;
+  margin-top: 1.15rem;
+}
+
+.hero-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: rgba(23, 50, 34, 0.18);
+  cursor: pointer;
+  transition:
+    width 0.25s ease,
+    height 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.hero-dot[data-active='true'] {
+  width: 0.72rem;
+  height: 0.72rem;
+  background: var(--text-h);
+}
+
+.hero-dot:hover,
+.hero-dot:focus-visible {
+  background: rgba(23, 70, 43, 0.45);
+}
+
+.hero-dot[data-active='true']:hover,
+.hero-dot[data-active='true']:focus-visible {
+  background: var(--text-h);
 }
 
 .system-section {
@@ -379,7 +513,7 @@
   .hero-section {
     grid-template-columns: 1fr;
     gap: 26px;
-    padding-bottom: 54px;
+    padding-bottom: 40px;
   }
 
   .hero-copy {
@@ -387,8 +521,32 @@
     padding-top: 0;
   }
 
-  .hero-visual {
-    min-height: 420px;
+  .hero-media {
+    width: 82%;
+  }
+
+  .hero-slides {
+    height: clamp(400px, calc(100svh - 13rem), 560px);
+  }
+
+  .hero-review-card {
+    animation-name: reviewCardUpTablet;
+  }
+
+  @keyframes reviewCardUpTablet {
+    from {
+      opacity: 0;
+      transform: translate(-18%, 1.5rem);
+    }
+
+    to {
+      opacity: 1;
+      transform: translate(-18%, 0);
+    }
+  }
+
+  .hero-dots {
+    width: 82%;
   }
 
   .system-grid {
@@ -404,9 +562,6 @@
     max-width: none;
   }
 
-  .hero-visual {
-    grid-template-columns: minmax(120px, 0.28fr) minmax(0, 0.72fr);
-  }
 }
 
 @media (max-width: 640px) {
@@ -424,16 +579,35 @@
     font-size: 1.75rem;
   }
 
-  .hero-visual {
-    grid-template-columns: 1fr;
-    min-height: auto;
+  .hero-media {
+    width: 100%;
   }
 
-  .visual-orbit {
-    min-height: 220px;
+  .hero-slides {
+    height: clamp(320px, 55svh, 420px);
   }
 
-  .visual-photo {
-    min-height: 280px;
+  .hero-dots {
+    width: 100%;
+  }
+
+  .hero-review-card {
+    left: 1rem;
+    bottom: 2.5rem;
+    width: min(14.5rem, calc(100% - 2rem));
+    padding: 0.85rem 0.9rem;
+    animation-name: reviewCardUpMobile;
+  }
+
+  @keyframes reviewCardUpMobile {
+    from {
+      opacity: 0;
+      transform: translateY(1.5rem);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
