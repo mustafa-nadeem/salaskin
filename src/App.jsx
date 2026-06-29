@@ -1,4 +1,28 @@
 import './App.css'
+import BeforeAfterSlider from './components/BeforeAfterSlider'
+import Hero from './components/Hero'
+import SuccessStories from './components/SuccessStories'
+
+const treatments = [
+  'Lipoma',
+  'Cyst removal',
+  'Anal skin tags',
+  'Xanthelasma removal',
+]
+
+const services = [
+  { name: 'Moles', variant: 'moles' },
+  { name: 'Vitiligo', variant: 'vitiligo' },
+  { name: 'Urticaria', variant: 'urticaria' },
+  { name: 'Excessive sweating', variant: 'sweating' },
+  { name: 'Psoriasis', variant: 'psoriasis' },
+  { name: 'Benign skin lesion', variant: 'lesion' },
+  { name: 'Infantile acne', variant: 'acne' },
+  { name: 'Skin cancer', variant: 'cancer' },
+  { name: 'Skin itching', variant: 'itching' },
+  { name: 'Male genital skin disorders', variant: 'genital' },
+  { name: 'Hair loss', variant: 'hair' },
+]
 
 function App() {
   return (
@@ -15,30 +39,14 @@ function App() {
           <a href="#results">Results</a>
         </nav>
 
-        <a className="header-cta" href="#consultation">
+        <a className="button button-primary" href="#consultation">
           Book a consultation
         </a>
       </header>
 
-      <section className="hero-section">
-        <div className="hero-copy">
-          <h1>Keeping patients at the core.</h1>
-          <p className="hero-text">
-            We create a simple, effortless experience designed to remove the
-            friction around modern skin consultations and let care stay the
-            focus.
-          </p>
-        </div>
+      <Hero />
 
-        <div className="hero-visual" aria-hidden="true">
-          <div className="visual-orbit"></div>
-          <div className="visual-photo">
-            <div className="photo-scene"></div>
-          </div>
-        </div>
-      </section>
-
-      <section className="system-section" id="services">
+      <section className="system-section" id="why-salaskin">
         <div className="section-intro">
           <span className="section-chip">Why Salaskin</span>
           <h2>A considered treatment system, working together.</h2>
@@ -82,6 +90,74 @@ function App() {
               combine to produce subtle, reliable, confidence-building results.
             </p>
           </article>
+        </div>
+      </section>
+
+      <section className="treatments-section" id="results">
+        <div className="treatments-slider">
+          <p className="treatments-slider-label">Patient results</p>
+          <BeforeAfterSlider
+            label="Skin treatment before and after comparison"
+            before={<div className="ba-face ba-face-before" aria-hidden="true"></div>}
+            after={<div className="ba-face ba-face-after" aria-hidden="true"></div>}
+          />
+          <p className="treatments-slider-hint">Drag to compare</p>
+        </div>
+
+        <div className="treatments-copy">
+          <span className="section-chip treatments-chip">Advanced dermatology solutions</span>
+          <h2 className="treatments-heading">Explore our featured treatment options</h2>
+          <p className="treatments-text">
+            We specialise in medical-grade skin rejuvenation and minor surgical
+            procedures, delivering precise, confidence-building results with a
+            calm clinical experience.
+          </p>
+
+          <ul className="treatments-list">
+            {treatments.map((item) => (
+              <li key={item}>
+                <span className="treatments-check" aria-hidden="true"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+
+          <div className="treatments-actions">
+            <a className="button button-primary" href="#consultation">
+              Book a consultation
+            </a>
+            <a className="button button-outline" href="#services">
+              View all services
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <SuccessStories />
+
+      <section className="services-section" id="services">
+        <div className="services-intro">
+          <h2 className="services-title">Our services</h2>
+          <a className="button button-outline" href="#consultation">
+            View all services
+          </a>
+        </div>
+
+        <div className="services-grid">
+          {services.map((service) => (
+            <article key={service.name} className="service-card">
+              <div
+                className={`service-image service-image--${service.variant}`}
+                aria-hidden="true"
+              ></div>
+              <div className="service-card-content">
+                <h3 className="service-name">{service.name}</h3>
+                <a className="button button-primary service-cta" href="#consultation">
+                  Book consultation
+                </a>
+              </div>
+            </article>
+          ))}
         </div>
       </section>
     </main>

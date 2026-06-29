@@ -13,6 +13,10 @@
   --sans: 'Manrope', 'Segoe UI', sans-serif;
   --heading: 'Cormorant Garamond', Georgia, serif;
   --mono: 'SFMono-Regular', Consolas, monospace;
+  --page-max: 1240px;
+  --page-gutter: clamp(1.75rem, 5vw, 5rem);
+  --section-space: clamp(4rem, 9vw, 8.5rem);
+  --nav-height: 4.5rem;
 
   font: 18px/1.55 var(--sans);
   letter-spacing: -0.01em;
@@ -31,9 +35,14 @@ body {
 }
 
 #root {
-  width: min(1280px, calc(100% - 32px));
-  margin: 18px auto;
-  min-height: calc(100svh - 36px);
+  width: 100%;
+  max-width: calc(var(--page-max) + (var(--page-gutter) * 2));
+  margin: 0 auto;
+  min-height: 100svh;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-inline: max(var(--page-gutter), env(safe-area-inset-left, 0px))
+    max(var(--page-gutter), env(safe-area-inset-right, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   box-sizing: border-box;
   border: none;
   border-radius: 0;
@@ -51,7 +60,7 @@ h2 {
 h1 {
   margin: 0;
   font-size: clamp(3.15rem, 4.8vw, 4.9rem);
-  line-height: 0.96;
+  line-height: 1;
   letter-spacing: -0.04em;
 }
 
@@ -84,13 +93,30 @@ button:focus-visible {
 @media (max-width: 1024px) {
   :root {
     font-size: 16px;
+    --page-gutter: clamp(1.75rem, 6vw, 3.5rem);
   }
 }
 
-@media (max-width: 640px) {
-  #root {
-    width: min(100%, calc(100% - 18px));
-    margin: 9px auto;
-    min-height: calc(100svh - 18px);
+@media (max-width: 768px) {
+  :root {
+    --page-gutter: 1.75rem;
+    --section-space: 3.75rem;
+    --nav-height: 4rem;
+  }
+
+  h1 {
+    font-size: clamp(2.35rem, 9.5vw, 3.25rem);
+    line-height: 1.02;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --page-gutter: 1.35rem;
+    --section-space: 3.25rem;
+  }
+
+  h1 {
+    font-size: clamp(2.1rem, 10vw, 2.75rem);
   }
 }
