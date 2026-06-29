@@ -4,7 +4,7 @@
   flex-direction: column;
   min-height: 100svh;
   padding: 24px 28px 56px;
-  overflow-x: clip;
+  overflow-x: visible;
   overflow-y: visible;
 }
 
@@ -171,93 +171,109 @@
   align-self: center;
 }
 
+.hero-stage-clip {
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
 .hero-media {
   position: relative;
   width: 85%;
+  margin: 0 auto;
 }
 
-.hero-slides {
+.hero-slides-viewport {
   position: relative;
   width: 100%;
   height: clamp(520px, calc(100svh - 11.5rem), 720px);
-  border-radius: 2.5rem;
   overflow: hidden;
+}
+
+.hero-slides-track {
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
 .hero-slide {
   position: absolute;
-  inset: 0;
-  opacity: 0;
-  transform: translateX(-30%);
-  pointer-events: none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 2.5rem;
+  overflow: hidden;
+  will-change: transform, opacity, filter;
 }
 
-.hero-slide[data-active='true'] {
-  opacity: 1;
+.hero-slide[data-role='active'] {
   transform: translateX(0);
-  z-index: 2;
-  pointer-events: auto;
-}
-
-.hero-slide[data-entering='true'] {
-  animation: slideInLeftToRight 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  opacity: 1;
   z-index: 2;
 }
 
-.hero-slide[data-leaving='true'] {
-  animation: slideOutLeftToRight 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+.hero-slide[data-role='exiting'] {
   z-index: 1;
-  pointer-events: none;
+  animation: slideExitLeft 0.75s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-@keyframes slideInLeftToRight {
+.hero-slide[data-role='entering'] {
+  z-index: 2;
+  animation: slideEnterFromRight 0.75s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes slideExitLeft {
   from {
-    opacity: 0;
-    transform: translateX(-30%);
+    transform: translateX(0);
+    opacity: 1;
+    filter: blur(0);
   }
 
   to {
-    opacity: 1;
-    transform: translateX(0);
+    transform: translateX(calc(-100% - 1.5rem));
+    opacity: 0.35;
+    filter: blur(14px);
   }
 }
 
-@keyframes slideOutLeftToRight {
+@keyframes slideEnterFromRight {
   from {
-    opacity: 1;
-    transform: translateX(0);
+    transform: translateX(calc(100% + 1.5rem));
+    opacity: 0.92;
   }
 
   to {
-    opacity: 0;
-    transform: translateX(30%);
+    transform: translateX(0);
+    opacity: 1;
   }
 }
 
 .hero-review-card {
   position: absolute;
-  left: 0;
-  bottom: 3.25rem;
+  left: 7.5%;
+  bottom: 5.1rem;
   z-index: 3;
-  width: min(18rem, 110%);
+  width: min(18rem, 72vw);
   padding: 1.15rem 1.2rem;
   border-radius: 1.1rem;
-  transform: translate(-38%, 0);
+  transform: translateX(-38%);
   background: rgba(255, 253, 250, 0.96);
   box-shadow: 0 18px 40px rgba(23, 50, 34, 0.12);
   backdrop-filter: blur(8px);
-  animation: reviewCardUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: cardRiseIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+  pointer-events: auto;
 }
 
-@keyframes reviewCardUp {
+@keyframes cardRiseIn {
   from {
     opacity: 0;
-    transform: translate(-38%, 1.5rem);
+    transform: translateX(-38%) translateY(1.75rem);
   }
 
   to {
     opacity: 1;
-    transform: translate(-38%, 0);
+    transform: translateX(-38%) translateY(0);
   }
 }
 
@@ -317,8 +333,8 @@
   justify-content: center;
   align-items: center;
   gap: 0.6rem;
-  width: 70%;
-  margin-top: 1.15rem;
+  width: 85%;
+  margin: 1.15rem auto 0;
 }
 
 .hero-dot {
@@ -525,28 +541,19 @@
     width: 82%;
   }
 
-  .hero-slides {
+  .hero-slides-viewport {
     height: clamp(400px, calc(100svh - 13rem), 560px);
   }
 
   .hero-review-card {
-    animation-name: reviewCardUpTablet;
-  }
-
-  @keyframes reviewCardUpTablet {
-    from {
-      opacity: 0;
-      transform: translate(-18%, 1.5rem);
-    }
-
-    to {
-      opacity: 1;
-      transform: translate(-18%, 0);
-    }
+    left: 9%;
+    animation-name: cardRiseInTablet;
   }
 
   .hero-dots {
     width: 82%;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .system-grid {
@@ -583,12 +590,14 @@
     width: 100%;
   }
 
-  .hero-slides {
+  .hero-slides-viewport {
     height: clamp(320px, 55svh, 420px);
   }
 
   .hero-dots {
     width: 100%;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .hero-review-card {
@@ -596,18 +605,30 @@
     bottom: 2.5rem;
     width: min(14.5rem, calc(100% - 2rem));
     padding: 0.85rem 0.9rem;
-    animation-name: reviewCardUpMobile;
+    animation-name: cardRiseInMobile;
+  }
+}
+
+@keyframes cardRiseInTablet {
+  from {
+    opacity: 0;
+    transform: translateX(-18%) translateY(1.75rem);
   }
 
-  @keyframes reviewCardUpMobile {
-    from {
-      opacity: 0;
-      transform: translateY(1.5rem);
-    }
+  to {
+    opacity: 1;
+    transform: translateX(-18%) translateY(0);
+  }
+}
 
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+@keyframes cardRiseInMobile {
+  from {
+    opacity: 0;
+    transform: translateY(1.75rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

@@ -61,39 +61,38 @@ const slides = [
 ]
 
 const SLIDE_INTERVAL_MS = 5000
-const SLIDE_TRANSITION_MS = 650
+const SLIDE_TRANSITION_MS = 750
 
 function App() {
   const [activeSlide, setActiveSlide] = useState(0)
-  const [leavingSlide, setLeavingSlide] = useState(null)
+  const [prevSlide, setPrevSlide] = useState(null)
   const review = slides[activeSlide].review
 
-  const goToSlide = (index) => {
-    if (index === activeSlide) return
-    setLeavingSlide(activeSlide)
-    setActiveSlide(index)
+  const changeSlide = (nextIndex) => {
+    if (nextIndex === activeSlide) return
+    setPrevSlide(activeSlide)
+    setActiveSlide(nextIndex)
   }
 
   useEffect(() => {
-    if (leavingSlide === null) return undefined
-
-    const timer = window.setTimeout(() => {
-      setLeavingSlide(null)
-    }, SLIDE_TRANSITION_MS)
-
+    if (prevSlide === null) return
+    const timer = window.setTimeout(() => setPrevSlide(null), SLIDE_TRANSITION_MS)
     return () => window.clearTimeout(timer)
-  }, [leavingSlide, activeSlide])
+  }, [prevSlide, activeSlide])
 
   useEffect(() => {
     const timer = window.setInterval(() => {
       setActiveSlide((current) => {
-        setLeavingSlide(current)
-        return (current + 1) % slides.length
+        const next = (current + 1) % slides.length
+        setPrevSlide(current)
+        return next
       })
     }, SLIDE_INTERVAL_MS)
 
     return () => window.clearInterval(timer)
-  }, [activeSlide])
+  }, [])
+
+  const isTransitioning = prevSlide !== null
 
   return (
     <main className="page-shell">
@@ -128,73 +127,79 @@ function App() {
         </div>
 
         <div className="hero-stage">
-          <div className="hero-media">
+          <div className="hero-stage-clip">
+            <div className="hero-media">
+              <div
+                className="hero-slides-viewport"
+                aria-roledescription="carousel"
+                aria-label="Treatment highlights"
+                data-transitioning={isTransitioning}
+              >
+                <div className="hero-slides-track">
+                  {isTransitioning && (
+                    <div
+                      className="hero-slide"
+                      data-role="exiting"
+                      style={slides[prevSlide].style}
+                      aria-hidden="true"
+                    />
+                  )}
+                  <div
+                    className="hero-slide"
+                    data-role={isTransitioning ? 'entering' : 'active'}
+                    style={slides[activeSlide].style}
+                    aria-hidden={false}
+                  />
+                </div>
+              </div>
+            </div>
+
             <div
-              className="hero-slides"
-              aria-roledescription="carousel"
-              aria-label="Treatment highlights"
+              className="hero-dots"
+              role="tablist"
+              aria-label="Choose a slide"
             >
               {slides.map((slide, index) => (
-                <div
+                <button
                   key={slide.id}
-                  className="hero-slide"
+                  type="button"
+                  className="hero-dot"
+                  role="tab"
+                  aria-label={`Show slide ${index + 1}`}
+                  aria-selected={index === activeSlide}
                   data-active={index === activeSlide}
-                  data-entering={
-                    leavingSlide !== null && index === activeSlide
-                  }
-                  data-leaving={index === leavingSlide}
-                  style={slide.style}
-                  aria-hidden={index !== activeSlide && index !== leavingSlide}
+                  onClick={() => changeSlide(index)}
                 />
               ))}
             </div>
-
-            <aside
-              className="hero-review-card"
-              aria-label="Patient review"
-              key={slides[activeSlide].id}
-            >
-              <div className="review-stars" aria-hidden="true">
-                {Array.from({ length: 5 }, (_, index) => (
-                  <span
-                    key={index}
-                    className={
-                      index < review.rating ? 'star star-filled' : 'star'
-                    }
-                  >
-                    ★
-                  </span>
-                ))}
-              </div>
-              <p className="review-quote">{review.quote}</p>
-              <div className="review-author">
-                <span className="review-avatar" aria-hidden="true" />
-                <div>
-                  <p className="review-name">{review.name}</p>
-                  <p className="review-meta">{review.meta}</p>
-                </div>
-              </div>
-            </aside>
           </div>
 
-          <div
-            className="hero-dots"
-            role="tablist"
-            aria-label="Choose a slide"
+          <aside
+            className="hero-review-card"
+            aria-label="Patient review"
+            key={slides[activeSlide].id}
           >
-            {slides.map((slide, index) => (
-              <button
-                key={slide.id}
-                type="button"
-                className="hero-dot"
-                role="tab"
-                aria-label={`Show slide ${index + 1}`}
-                aria-selected={index === activeSlide}
-                data-active={index === activeSlide}
-                onClick={() => goToSlide(index)}
-              />
-            ))}
-          </div>
+            <div className="review-stars" aria-hidden="true">
+              {Array.from({ length: 5 }, (_, index) => (
+                <span
+                  key={index}
+                  className={
+                    index < review.rating ? 'star star-filled' : 'star'
+                  }
+                >
+                  ★
+                </span>
+              ))}
+            </div>
+            <p className="review-quote">{review.quote}</p>
+            <div className="review-author">
+              <span className="review-avatar" aria-hidden="true" />
+              <div>
+                <p className="review-name">{review.name}</p>
+                <p className="review-meta">{review.meta}</p>
+              </div>
+            </div>
+          </aside>
         </div>
       </section>
 
