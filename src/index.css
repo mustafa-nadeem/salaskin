@@ -3,11 +3,11 @@
 :root {
   --bg: #ffffff;
   --bg-soft: #f6eee4;
-  --forest: #17462b;
-  --forest-soft: rgba(23, 70, 43, 0.8);
-  --text: #5d655d;
-  --muted-strong: #4f5b53;
-  --text-h: #173222;
+  --forest: #0f3e17;
+  --forest-soft: rgba(15, 62, 23, 0.8);
+  --text: #0f3e17;
+  --muted-strong: #0f3e17;
+  --text-h: #0f3e17;
   --border: rgba(23, 70, 43, 0.1);
   --white: #fffdfa;
   --sans: 'Manrope', 'Segoe UI', sans-serif;
@@ -51,7 +51,8 @@ body {
 }
 
 h1,
-h2 {
+h2,
+h3 {
   font-family: var(--heading);
   font-weight: 500;
   color: var(--text-h);

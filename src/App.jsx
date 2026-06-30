@@ -1,6 +1,8 @@
 import './App.css'
 import BeforeAfterSlider from './components/BeforeAfterSlider'
 import Hero from './components/Hero'
+import ProgramTimeline from './components/ProgramTimeline'
+import Services from './components/Services'
 import SuccessStories from './components/SuccessStories'
 
 const treatments = [
@@ -8,20 +10,6 @@ const treatments = [
   'Cyst removal',
   'Anal skin tags',
   'Xanthelasma removal',
-]
-
-const services = [
-  { name: 'Moles', variant: 'moles' },
-  { name: 'Vitiligo', variant: 'vitiligo' },
-  { name: 'Urticaria', variant: 'urticaria' },
-  { name: 'Excessive sweating', variant: 'sweating' },
-  { name: 'Psoriasis', variant: 'psoriasis' },
-  { name: 'Benign skin lesion', variant: 'lesion' },
-  { name: 'Infantile acne', variant: 'acne' },
-  { name: 'Skin cancer', variant: 'cancer' },
-  { name: 'Skin itching', variant: 'itching' },
-  { name: 'Male genital skin disorders', variant: 'genital' },
-  { name: 'Hair loss', variant: 'hair' },
 ]
 
 function App() {
@@ -135,31 +123,9 @@ function App() {
 
       <SuccessStories />
 
-      <section className="services-section" id="services">
-        <div className="services-intro">
-          <h2 className="services-title">Our services</h2>
-          <a className="button button-outline" href="#consultation">
-            View all services
-          </a>
-        </div>
+      <Services />
 
-        <div className="services-grid">
-          {services.map((service) => (
-            <article key={service.name} className="service-card">
-              <div
-                className={`service-image service-image--${service.variant}`}
-                aria-hidden="true"
-              ></div>
-              <div className="service-card-content">
-                <h3 className="service-name">{service.name}</h3>
-                <a className="button button-primary service-cta" href="#consultation">
-                  Book consultation
-                </a>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
+      <ProgramTimeline />
     </main>
   )
 }
