@@ -1,6 +1,8 @@
 import './App.css'
 import BeforeAfterSlider from './components/BeforeAfterSlider'
 import Hero from './components/Hero'
+import Footer from './components/Footer'
+import ConsultationSection from './components/ConsultationSection'
 import ProgramTimeline from './components/ProgramTimeline'
 import Services from './components/Services'
 import SuccessStories from './components/SuccessStories'
@@ -126,6 +128,10 @@ function App() {
       <Services />
 
       <ProgramTimeline />
+
+      <ConsultationSection />
+
+      <Footer />
     </main>
   )
 }

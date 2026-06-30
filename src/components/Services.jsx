@@ -27,7 +27,7 @@ const services = [
   },
   {
     id: 'sweating',
-    name: 'Excessive sweating',
+    name: 'Excessive Sweating',
     variant: 'sweating',
     title: 'Targeted treatment for excessive sweating',
     description:
@@ -43,7 +43,7 @@ const services = [
   },
   {
     id: 'lesion',
-    name: 'Benign skin lesion',
+    name: 'Benign Skin Lesion',
     variant: 'lesion',
     title: 'Removal and care for benign skin lesions',
     description:
@@ -51,7 +51,7 @@ const services = [
   },
   {
     id: 'acne',
-    name: 'Infantile acne',
+    name: 'Infantile Acne',
     variant: 'acne',
     title: 'Gentle guidance for infantile acne',
     description:
@@ -59,7 +59,7 @@ const services = [
   },
   {
     id: 'cancer',
-    name: 'Skin cancer',
+    name: 'Skin Cancer',
     variant: 'cancer',
     title: 'Early detection and skin cancer care',
     description:
@@ -67,7 +67,7 @@ const services = [
   },
   {
     id: 'itching',
-    name: 'Skin itching',
+    name: 'Skin Itching',
     variant: 'itching',
     title: 'Investigation and relief for persistent itching',
     description:
@@ -75,7 +75,7 @@ const services = [
   },
   {
     id: 'genital',
-    name: 'Male genital skin disorders',
+    name: 'Male Genital Skin Disorders',
     variant: 'genital',
     title: 'Discreet care for male genital skin concerns',
     description:
@@ -83,7 +83,7 @@ const services = [
   },
   {
     id: 'hair',
-    name: 'Hair loss',
+    name: 'Hair Loss',
     variant: 'hair',
     title: 'Assessment and treatment for hair loss',
     description:
@@ -94,23 +94,27 @@ const services = [
 function Services() {
   const [activeIndex, setActiveIndex] = useState(0)
   const sectionRef = useRef(null)
-  const stepRefs = useRef([])
-  const rafId = useRef(null)
+  const stepsRef = useRef(null)
   const active = services[activeIndex]
 
   useLayoutEffect(() => {
-    const updateActiveStep = () => {
-      const steps = stepRefs.current.filter(Boolean)
+    const container = stepsRef.current
+    if (!container) return
+
+    const getSteps = () => [...container.querySelectorAll('.services-step')]
+
+    const pickClosestToCenter = () => {
+      const steps = getSteps()
       if (!steps.length) return
 
-      const viewportCenter = window.innerHeight * 0.5
+      const center = window.innerHeight / 2
       let closestIndex = 0
       let closestDistance = Infinity
 
       steps.forEach((step, index) => {
         const rect = step.getBoundingClientRect()
         const stepCenter = rect.top + rect.height / 2
-        const distance = Math.abs(stepCenter - viewportCenter)
+        const distance = Math.abs(stepCenter - center)
 
         if (distance < closestDistance) {
           closestDistance = distance
@@ -123,55 +127,39 @@ function Services() {
       )
     }
 
-    const scheduleUpdate = () => {
-      if (rafId.current !== null) return
-      rafId.current = window.requestAnimationFrame(() => {
-        rafId.current = null
-        updateActiveStep()
-      })
-    }
+    pickClosestToCenter()
 
-    const observer = new IntersectionObserver(scheduleUpdate, {
+    const observer = new IntersectionObserver(() => pickClosestToCenter(), {
       root: null,
-      rootMargin: '-40% 0px -40% 0px',
-      threshold: [0, 0.25, 0.5, 0.75, 1],
+      rootMargin: '-50% 0px -50% 0px',
+      threshold: 0,
     })
 
-    const bindObservers = () => {
-      observer.disconnect()
-      stepRefs.current.filter(Boolean).forEach((step) => observer.observe(step))
-      scheduleUpdate()
-    }
+    getSteps().forEach((step) => observer.observe(step))
 
-    bindObservers()
-    window.addEventListener('scroll', scheduleUpdate, { passive: true })
-    window.addEventListener('resize', scheduleUpdate)
-
-    const resizeObserver = new ResizeObserver(bindObservers)
-    if (sectionRef.current) {
-      resizeObserver.observe(sectionRef.current)
-    }
+    window.addEventListener('resize', pickClosestToCenter)
 
     return () => {
       observer.disconnect()
-      resizeObserver.disconnect()
-      window.removeEventListener('scroll', scheduleUpdate)
-      window.removeEventListener('resize', scheduleUpdate)
-      if (rafId.current !== null) {
-        window.cancelAnimationFrame(rafId.current)
-      }
+      window.removeEventListener('resize', pickClosestToCenter)
     }
   }, [])
 
   const scrollToStep = (index) => {
-    const step = stepRefs.current[index]
+    const steps = stepsRef.current
+      ? [...stepsRef.current.querySelectorAll('.services-step')]
+      : []
+    const step = steps[index]
     if (!step) return
+
+    const label = step.querySelector('.services-step-label')
+    const target = label ?? step
 
     const prefersReducedMotion = window.matchMedia(
       '(prefers-reduced-motion: reduce)',
     ).matches
 
-    step.scrollIntoView({
+    target.scrollIntoView({
       behavior: prefersReducedMotion ? 'auto' : 'smooth',
       block: 'center',
     })
@@ -179,19 +167,16 @@ function Services() {
 
   return (
     <section className="services-section" id="services" ref={sectionRef}>
-      <h2 className="services-title">Our services</h2>
+      <h2 className="services-title">Our Services</h2>
 
       <div className="services-body">
-        <div className="services-steps">
+        <div className="services-steps" ref={stepsRef}>
           {services.map((service, index) => (
             <article
               key={service.id}
-              className="services-step"
+              className={`services-step${index === activeIndex ? ' is-active' : ''}`}
               data-index={index}
-              data-active={index === activeIndex}
-              ref={(element) => {
-                stepRefs.current[index] = element
-              }}
+              aria-current={index === activeIndex ? 'step' : undefined}
             >
               <button
                 type="button"

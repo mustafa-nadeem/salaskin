@@ -16,6 +16,7 @@
   --page-max: 1240px;
   --page-gutter: clamp(1.75rem, 5vw, 5rem);
   --section-space: clamp(4rem, 9vw, 8.5rem);
+  --section-viewport: 70svh;
   --nav-height: 4.5rem;
 
   font: 18px/1.55 var(--sans);

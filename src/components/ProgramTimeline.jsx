@@ -180,11 +180,6 @@ function ProgramTimeline() {
                 <span className="program-step-label">{step.label}</span>
                 <h3 className="program-step-title">{step.title}</h3>
                 <p className="program-step-text">{step.description}</p>
-                {index === steps.length - 1 ? (
-                  <a className="button button-primary" href="#consultation">
-                    Book a consultation
-                  </a>
-                ) : null}
               </div>
             </article>
           ))}
@@ -237,17 +232,12 @@ function ProgramTimeline() {
             3-Step Dermatological Program for Healthy, Radiant Skin
           </h2>
         </li>
-        {steps.map((step, index) => (
+        {steps.map((step) => (
           <li key={step.id} className="program-mobile-item">
             <article className="program-mobile-card">
               <span className="program-step-label">{step.label}</span>
               <h3 className="program-step-title">{step.title}</h3>
               <p className="program-step-text">{step.description}</p>
-              {index === steps.length - 1 ? (
-                <a className="button button-primary" href="#consultation">
-                  Book a consultation
-                </a>
-              ) : null}
             </article>
           </li>
         ))}
